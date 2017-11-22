@@ -4,25 +4,26 @@ import math
 from scipy.spatial.distance import *
 
 def generateGraph(path, maxNode):
-    g = nx.Graph()
     file = open (path, 'r')
     a = []
-    # for i in range(0,7):
-    #     file.readline()
     line = file.readline()
     while line != "EOF":
         node = line.split(" ")
         a.append([float(node[1]), float(node[2])])
-        g.add_node(int(node[0]))
         line = file.readline()
         if(int(node[0]) >= maxNode):
             break
-    for i in range(0,min(len(a), maxNode)):
-        distI = []
-        for j in range(i, min(len(a), maxNode)):
-            if(i != j) :
-                distance = euclidean(a[i],[j])
-                g.add_edge(i+1, j+1, weight=distance)
+    g = []
+    for i in range(min(len(a), maxNode)):
+        field = []
+        for j in range(min(len(a), maxNode)):
+            field.append(float("inf"))
+        g.append(field)
+    for i in range(0,min(len(g), maxNode)):
+        for j in range(i+1, min(len(g), maxNode)):
+            distance = euclidean(a[i],a[j])
+            g[i][j] = distance
+            g[j][i] = distance
     file.close()
     return g
 
